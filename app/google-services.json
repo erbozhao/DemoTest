@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "426004985217",
+    "firebase_url": "https://erbozhao-70a8f.firebaseio.com",
+    "project_id": "erbozhao-70a8f",
+    "storage_bucket": "erbozhao-70a8f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:426004985217:android:38acb08c77441a3f0c2480",
+        "android_client_info": {
+          "package_name": "com.onus.demotest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "426004985217-6unm97m2qn8k4pprllcbgif2tr2k2p8a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3y-zabwKDV403apZJNsYbrQS4-37X3Dg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "426004985217-6unm97m2qn8k4pprllcbgif2tr2k2p8a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Activity.Default" parent="Theme.AppCompat" />
+
+    <style name="Theme.DemoTest.Light" parent="@android:style/Theme.Holo.Light.NoActionBar" />
+
+    <style name="Theme.DemoTest.DayNight" parent="@android:style/Theme.Holo.NoActionBar" />
+
+    <style name="ActivityMain" parent="Theme.AppCompat">
+        <item name="android:windowBackground">@drawable/activity_window_bg</item>
+    </style>
+
+
+    <style name="DialogActivity" parent="@style/Theme.AppCompat.Dialog">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowFrame">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item><!--浮在其他Activity之上-->
+        <item name="android:windowIsTranslucent">true</item><!--半透明-->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@android:color/transparent</item><!--背景透明-->
+        <item name="android:backgroundDimAmount">0.5</item><!--透明度 0.0f到1.0f。1.0完全不透明，0.0f完全透明-->
+    </style>
+
+</resources>

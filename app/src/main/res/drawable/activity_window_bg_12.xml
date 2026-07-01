@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+    <item android:drawable="@color/theme_common_color_d1" />
+    <item
+        android:width="288dp"
+        android:height="288dp"
+        android:gravity="center">
+        <inset
+            android:drawable="@drawable/app_splash_logo"
+            android:insetLeft="63dp"
+            android:insetTop="63dp"
+            android:insetRight="63dp"
+            android:insetBottom="63dp" />
+    </item>
+</layer-list>

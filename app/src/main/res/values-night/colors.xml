@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="theme_common_color_a1">#FFDCDCDC</color>
+    <color name="theme_common_color_a2">#FFAEAEAE</color>
+    <color name="theme_common_color_a3">#FFA2A2A2</color>
+    <color name="theme_common_color_a4">#FF5C5C5C</color>
+    <color name="theme_common_color_a5">#d8FFFFFF</color>
+    <color name="theme_common_color_a6">#ffCFCFD0</color>
+    <color name="theme_common_color_a7">#FFB9B9B9</color>
+    <color name="theme_common_color_a9">#FFD1D1D1</color>
+    <color name="theme_common_color_a10">#ff3B72EE</color>
+    <color name="theme_common_color_a11">#FF8B8B8B</color>
+    <color name="theme_common_color_a12">#ffBFBFBF</color>
+    <color name="theme_common_color_a13">#E5FFFFFF</color>
+    <color name="theme_common_color_a14">#ff2380E9</color>
+
+    <color name="theme_common_color_b1">#5D72FF</color>
+    <color name="theme_common_color_b1p">#ff00A7F3</color>
+    <color name="theme_common_color_b1d">#7A3B59C6</color>
+    <color name="theme_common_color_b2">#ffDC4F5E</color>
+    <color name="theme_common_color_b2p">#ffD15946</color>
+    <color name="theme_common_color_b2d">#7aBB4754</color>
+    <color name="theme_common_color_b3">#ff4D4D4D</color>
+    <color name="theme_common_color_b3p">#ff717171</color>
+    <color name="theme_common_color_b3d">#7a4D4D4D</color>
+    <color name="theme_common_color_b4">#ff555C64</color>
+    <color name="theme_common_color_b5">#ff00A7F3</color>
+    <color name="theme_common_color_b7">#ff02BE61</color>
+    <color name="theme_common_color_b10">#0B7854</color>
+    <color name="theme_common_color_b10p">#19AD67</color>
+    <color name="theme_common_color_b10d">#0B7854</color>
+
+    <color name="theme_common_color_d1">#FF171717</color>
+    <color name="theme_common_color_d1p">#ff383D41</color>
+    <color name="theme_common_color_d2">#ff0F1213</color>
+    <color name="theme_common_color_d2p">#ff4B5156</color>
+    <color name="theme_common_color_d3">#ff121316</color>
+    <color name="theme_common_color_d4">#25ffffff</color>
+    <color name="theme_common_color_d6">#ff363A3D</color>
+    <color name="theme_common_color_d7">#ff121316</color>
+    <color name="theme_common_color_d12">#ff1A192D</color>
+    <color name="theme_common_color_d13">#ff3B72EE</color>
+    <color name="theme_comomn_color_d14">#ff131618</color>
+    <color name="theme_comomn_color_d15">#ff0f1213</color>
+    <!-- 表情面板背景色 -->
+    <color name="theme_comomn_color_d16">#192125</color>
+    <color name="theme_comomn_color_d17">#ff333333</color>
+    <color name="theme_comomn_color_d18">#484F57</color>
+    <color name="theme_common_color_d19">#4Dffffff</color>
+    <color name="theme_common_color_d20">#ff191C1F</color>
+
+    <!-- 渐变色 -->
+    <color name="theme_common_color_g1">#121316</color>
+    <color name="theme_common_color_g1e">#0D0E10</color>
+    <color name="theme_common_color_g2">#B33773F6</color>
+    <color name="theme_common_color_g2e">#B38651F3</color>
+    <color name="theme_common_color_g3">#3D79FF</color>
+    <color name="theme_common_color_g3e">#5A60FF</color>
+    <color name="theme_common_color_g4">#4D84FF</color>
+    <color name="theme_common_color_g4e">#00A7F3</color>
+
+    <color name="theme_common_color_l1">#FFDDDDDD</color>
+    <color name="theme_common_color_l2">#9498A3</color>
+    <color name="theme_common_color_l3">#8F9299</color>
+    <color name="theme_common_color_l4">#7fffffff</color>
+
+    <color name="theme_common_color_p1">#0B7854</color>
+    <color name="theme_common_color_p2">#B98B06</color>
+    <color name="theme_common_color_p3">#9C7100</color>
+    <color name="theme_common_color_p4">#6E5419</color>
+    <color name="theme_common_color_p5">#15171A</color>
+    <color name="theme_common_color_p6">#B5C764</color>
+    <color name="theme_common_color_p5p">#1F2423</color>
+    <color name="theme_common_color_p7">#3D382E</color>
+    <color name="theme_common_color_p11">#B63536</color>
+
+    <color name="theme_common_color_bg">#ff34393e</color>
+    <color name="kibo_black">#ff4D5258</color>
+
+    <color name="window_bg">#FF000000</color>
+</resources>

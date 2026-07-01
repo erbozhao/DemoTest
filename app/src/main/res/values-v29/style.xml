@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Activity.Default" parent="@android:style/Theme.DeviceDefault.DayNight">
+        <item name="android:windowBackground">@color/window_bg</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:statusBarColor">@color/window_bg</item>
+        <item name="android:navigationBarColor">@color/window_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:navigationBarDividerColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.DemoTest.Light" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/window_bg</item>
+        <item name="android:navigationBarColor">@color/window_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:navigationBarDividerColor">@android:color/transparent</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:isLightTheme">true</item>
+    </style>
+
+    <style name="Theme.DemoTest.DayNight" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">@color/window_bg</item>
+        <item name="android:navigationBarColor">@color/window_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:navigationBarDividerColor">@android:color/transparent</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:isLightTheme">false</item>
+    </style>
+
+    <style name="ActivityMain.Light" parent="@style/Theme.AppCompat.Light">
+        <item name="android:isLightTheme">true</item>
+        <item name="android:windowBackground">@color/theme_common_color_d1</item>
+        <item name="android:textSelectHandleLeft">@null</item>
+        <item name="android:textSelectHandleRight">@null</item>
+        <item name="android:textSelectHandle">@null</item>
+        <item name="android:textColorHighlight">@null</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:animationCache">false</item>
+        <item name="android:textDirection">locale</item>
+        <item name="android:windowDisablePreview">false</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowShowWallpaper">false</item>
+        <item name="android:activityOpenEnterAnimation">@null</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+
+    <style name="ActivityMain.DayNight" parent="@style/Theme.AppCompat">
+        <item name="android:isLightTheme">false</item>
+        <item name="android:windowBackground">@color/theme_common_color_d1</item>
+        <item name="android:textSelectHandleLeft">@null</item>
+        <item name="android:textSelectHandleRight">@null</item>
+        <item name="android:textSelectHandle">@null</item>
+        <item name="android:textColorHighlight">@null</item>
+        <item name="android:textCursorDrawable">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:animationCache">false</item>
+        <item name="android:textDirection">locale</item>
+        <item name="android:windowDisablePreview">false</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowShowWallpaper">false</item>
+        <item name="android:activityOpenEnterAnimation">@null</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+</resources>

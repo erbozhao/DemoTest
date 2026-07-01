@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DemoTest</string>
+
+    <string name="title_whatsapp_cache">Get WhatsApp cache</string>
+</resources>

@@ -1,0 +1,38 @@
+### 重签名 ###
+1.扩展名更改为 .zip
+2.7za x app.zip -oapp
+3.修改channel.ini
+4.7za a app_modified.zip -r app\*
+5.扩展名更改回 .apk
+6.zipalign -v -p 4 app_modified.apk app_final.apk
+7.apksigner sign --ks xx --ks-key-alias xx --ks-pass pass:xx --key-pass pass:xx --min-sdk-version xx --in xx --out xx
+
+
+#######  demetest  ######
+// 解压缩
+7za x -tzip -aos -ounzip ./app-23601-release.apk
+
+
+// 满比压缩至文件
+7za a -tzip -mx=9 app-33602.apk_TMP ./app-23601-release/*.*
+7za a -tzip -mx=9 app-33602.apk_TMP ./app-23601-release/assets
+7za a -tzip -mx=9 app-33602.apk_TMP ./app-23601-release/kotlin
+
+7za a -tzip -mx=9 app-33602.apk_TMP ./app-23601-release/*.* ./app-23601-release/assets ./app-23601-release/kotlin
+7za a -tzip -mx=9 app-android33602.apk_TMP ./unzip/*.* ./unzip/assets ./unzip/kotlin
+
+// 0比压缩至文件
+7za a -tzip -mx=0 app-33602.apk_TMP ./app-23601-release/res
+7za a -tzip -mx=0 app-33602.apk_TMP ./app-23601-release/arsctmp/resources.arsc
+
+7za a -tzip -mx=0 app-33602.apk_TMP ./app-23601-release/res ./arsctmp/resources.arsc
+7za a -tzip -mx=0 app-android33602.apk_TMP ./unzip/res ./arsctmp/resources.arsc
+
+// 比对
+/Users/onuszhao/Library/Android/sdk/build-tools/30.0.2/zipalign -v -p 4 ./app_unzipalign.apk ./app_unsign.apk
+/Users/onuszhao/Library/Android/sdk/build-tools/30.0.2/zipalign -v -p 4 ./app_android_unzipalign23601.apk ./app_android_unsign23601.apk
+
+// 重签名
+/Users/onuszhao/Library/Android/sdk/build-tools/30.0.2/apksigner sign --ks ./demotest.jks --ks-key-alias demotest --ks-pass pass:money999999999 --key-pass pass:money999999999 --min-sdk-version 21 --in ./app_unsign.apk --out ./app_resign.apk
+
+/Users/onuszhao/Library/Android/sdk/build-tools/30.0.2/apksigner sign --ks ./demotest.jks --ks-key-alias demotest --ks-pass pass:money999999999 --key-pass pass:money999999999 --min-sdk-version 21 --in app_android_unsign23601.apk --out ./app_android_resign23601.apk

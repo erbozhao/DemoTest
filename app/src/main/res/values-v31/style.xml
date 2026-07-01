@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ActivityMain" parent="Theme.AppCompat">
+        <item name="android:windowBackground">@drawable/activity_window_bg</item>
+
+        <item name="android:windowSplashScreenBackground">@color/transparent</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/activity_window_bg_12</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/activity_window_brand_12</item>
+        <item name="android:windowSplashScreenAnimationDuration">700</item>
+    </style>
+</resources>
