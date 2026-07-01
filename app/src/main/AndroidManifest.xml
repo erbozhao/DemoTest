@@ -55,7 +55,6 @@
 
     <application
         android:allowBackup="true"
-        android:extractNativeLibs="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
@@ -63,7 +62,7 @@
         android:supportsRtl="true"
         android:theme="@style/ActivityMain">
         <activity
-            android:name=".MainActivity"
+            android:name=".app.MainActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="locale|keyboardHidden|navigation|orientation|uiMode|screenSize|fontScale|screenLayout|smallestScreenSize|density"
             android:exported="true"
@@ -81,7 +80,7 @@
         </activity>
 
         <activity
-            android:name=".pages.whatsapp.AllStatusActivity"
+            android:name=".feature.whatsapp.AllStatusActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -89,7 +88,7 @@
             android:theme="@style/ActivityMain"></activity>
 
         <activity
-            android:name=".pages.whatsapp.WhatsAppCacheActivity"
+            android:name=".feature.whatsapp.WhatsAppCacheActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -114,7 +113,7 @@
         </provider>
 
         <activity
-            android:name=".pages.webview.WebViewActivity"
+            android:name=".feature.webview.WebViewActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="locale|keyboardHidden|navigation|orientation|uiMode|screenSize|fontScale|screenLayout|smallestScreenSize|density"
             android:excludeFromRecents="true"
@@ -129,7 +128,7 @@
             android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
 
         <activity
-            android:name=".pages.notification.BindNotificationActivity"
+            android:name=".feature.notification.BindNotificationActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -137,7 +136,7 @@
             android:theme="@style/ActivityMain" />
 
         <service
-            android:name=".services.PushMonitorService"
+            android:name=".service.PushMonitorService"
             android:exported="true"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
@@ -146,7 +145,7 @@
         </service>
 
         <activity
-            android:name=".pages.notification.NotifyDemoActivity"
+            android:name=".feature.notification.NotifyDemoActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -154,7 +153,7 @@
             android:theme="@style/ActivityMain"></activity>
 
         <activity
-            android:name=".pages.notification.IncomingCallActivity"
+            android:name=".feature.notification.IncomingCallActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -162,12 +161,12 @@
             android:theme="@style/ActivityMain"></activity>
 
         <service
-            android:name=".pages.notification.CallNotificationService"
+            android:name=".feature.notification.CallNotificationService"
             android:foregroundServiceType="phoneCall"
             android:exported="false" />
 
         <receiver
-            android:name=".pages.notification.NotificationBroadcastReceiver"
+            android:name=".feature.notification.NotificationBroadcastReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="PLAY_ACTION" />
@@ -180,7 +179,7 @@
         </receiver>
 
         <service
-            android:name=".pages.notification.MediaPlaybackServiceCompat"
+            android:name=".feature.notification.MediaPlaybackServiceCompat"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="mediaPlayback" >
@@ -199,7 +198,7 @@
         <!--        </receiver>-->
 
         <activity
-            android:name=".pages.file.AllFileActivity"
+            android:name=".feature.file.AllFileActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -207,7 +206,7 @@
             android:theme="@style/ActivityMain"></activity>
 
         <activity
-            android:name=".pages.file.UsageStatsActivity"
+            android:name=".feature.file.UsageStatsActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -220,7 +219,7 @@
         </activity>
 
         <activity
-            android:name=".pages.video.VideoActivity"
+            android:name=".feature.video.VideoActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -228,7 +227,7 @@
             android:theme="@style/ActivityMain" />
 
         <activity
-            android:name=".pages.ui.tab.TabActivity"
+            android:name=".feature.ui.tab.TabActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -236,7 +235,7 @@
             android:theme="@style/ActivityMain" />
 
         <activity
-            android:name=".pages.ui.FontsActivity"
+            android:name=".feature.ui.FontsActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -244,7 +243,7 @@
             android:theme="@style/ActivityMain" />
 
         <activity
-            android:name=".pages.ui.FrameActivity"
+            android:name=".feature.ui.FrameActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -252,7 +251,7 @@
             android:theme="@style/ActivityMain" />
 
         <activity
-            android:name=".pages.ui.DialogActivity"
+            android:name=".feature.ui.DialogActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -260,7 +259,7 @@
             android:theme="@style/ActivityMain" />
 
         <activity
-            android:name=".pages.notification.PostNotificationActivity"
+            android:name=".feature.notification.PostNotificationActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -268,7 +267,7 @@
             android:theme="@style/ActivityMain" />
 
         <activity
-            android:name=".pages.ui.draglist.DragListActivity"
+            android:name=".feature.ui.draglist.DragListActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="standard"
@@ -288,7 +287,7 @@
         </service>
 
         <service
-            android:name=".fcm.FcmMessageService"
+            android:name=".service.fcm.FcmMessageService"
             android:directBootAware="true"
             android:exported="false">
             <intent-filter>
@@ -297,13 +296,13 @@
         </service>
 
         <provider
-            android:name="com.onus.demotest.services.IPCServiceProvider"
+            android:name="com.onus.demotest.service.IPCServiceProvider"
             android:authorities="${applicationId}.pigeon.service"
             android:exported="false"
             android:process=":service" />
 
         <activity
-            android:name=".test.UriReceiveActivity"
+            android:name=".feature.test.UriReceiveActivity"
             android:exported="true"
             android:theme="@style/ActivityMain">
             <intent-filter>
