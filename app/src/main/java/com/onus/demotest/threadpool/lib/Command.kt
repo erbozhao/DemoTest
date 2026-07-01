@@ -1,43 +1,22 @@
-package com.onus.demotest.threadpool.lib;
+package com.onus.demotest.threadpool.lib
 
-/**
- * Created by niuniuyang on 2020-06-20. Description
- *
- * Runnable的包装，Command用于对接CommandThreadPoolExecutor，
- *
- * Command对开发者不可见，开发者只需要关心Runnable，保证新线程池对现有业务的兼容
- *
- * 开发者通过 {@link CommandPool#execute(Runnable)} 方法执行任务，最终会包装成Command
- *
- * 投递给{@link CommandThreadPoolExecutor#execute(Command)}
- */
-public class Command
-{
+open class Command(
+    @JvmField var runnable: Runnable,
+    @JvmField var commandPool: ICommandPool,
+    @JvmField var priority: Int
+) {
+    @JvmField
+    var performanceData: CommandPerformanceData = CommandPerformanceData()
 
-	public ICommandPool				commandPool;
-	public Runnable					runnable;
-	public CommandPerformanceData	performanceData	= new CommandPerformanceData();
-	public int								priority;
+    fun recordQueueTime(value: Long) {
+        performanceData.queueTime = value
+    }
 
-	Command(Runnable runnable, ICommandPool commandPool, int priority)
-	{
-		this.runnable = runnable;
-		this.commandPool = commandPool;
-		this.priority = priority;
-	}
+    fun recordStartExeTime(value: Long) {
+        performanceData.startExeTime = value
+    }
 
-	public void recordQueueTime(long l)
-	{
-		performanceData.queueTime = l;
-	}
-
-	public void recordStartExeTime(long l)
-	{
-		performanceData.startExeTime = l;
-	}
-
-	public void recordCompletedTime(long l)
-	{
-		performanceData.completeTime = l;
-	}
+    fun recordCompletedTime(value: Long) {
+        performanceData.completeTime = value
+    }
 }

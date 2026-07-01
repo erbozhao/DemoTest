@@ -1,66 +1,40 @@
-package com.onus.demotest.threadpool.lib;
+package com.onus.demotest.threadpool.lib
 
-import java.util.List;
+class CommandServiceManager private constructor() {
+    private val commandPoolSupplier: CommandPoolSupplier = CommandPoolSupplier()
 
-/**
- * Created by niuniuyang on 2020-07-31. Description
- *
- * 单例管理CommandPoolSupplier，一个app进程里面，推荐使用一个CommandPoolSupplier
- *
- * 这里一个app进程才能更大复用线程池资源
- *
- * 当然根据业务的需要，你可以不使用这个单例，直接创建CommandPoolSupplier
- */
-public class CommandServiceManager
-{
+    fun getCommandSupplier(): CommandPoolSupplier {
+        return commandPoolSupplier
+    }
 
-	private static volatile CommandServiceManager	instance	= null;
-	private CommandPoolSupplier						commandPoolSupplier;
+    fun shutdown() {
+        commandPoolSupplier.shutdown()
+        synchronized(CommandServiceManager::class.java) {
+            instance = null
+        }
+    }
 
-	private CommandServiceManager()
-	{
-		commandPoolSupplier = new CommandPoolSupplier();
-	}
+    fun shutdownNow(): List<Command> {
+        synchronized(CommandServiceManager::class.java) {
+            instance = null
+        }
+        return commandPoolSupplier.shutdownNow()
+    }
 
-	public static CommandServiceManager get()
-	{
-		if (instance == null)
-		{
-			synchronized (CommandServiceManager.class)
-			{
-				if (instance == null)
-				{
-					instance = new CommandServiceManager();
-				}
-			}
-		}
-		return instance;
-	}
+    companion object {
+        @Volatile
+        private var instance: CommandServiceManager? = null
 
-	/**
-	 * 返回一个CommandPoolSupplier，用于创建CommandPool
-	 */
-	public CommandPoolSupplier getCommandSupplier()
-	{
-		return commandPoolSupplier;
-	}
-
-	public void shutdown()
-	{
-		commandPoolSupplier.shutdown();
-		synchronized (CommandServiceManager.class)
-		{
-			instance = null;
-		}
-	}
-
-	public List<Command> shutdownNow()
-	{
-		synchronized (CommandServiceManager.class)
-		{
-			instance = null;
-		}
-		return commandPoolSupplier.shutdownNow();
-	}
-
+        @JvmStatic
+        fun get(): CommandServiceManager {
+            if (instance == null) {
+                synchronized(CommandServiceManager::class.java) {
+                    if (instance == null) {
+                        instance = CommandServiceManager()
+                    }
+                }
+            }
+            return instance!!
+        }
+    }
 }

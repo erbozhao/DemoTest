@@ -1,12 +1,10 @@
-package com.onus.demotest.threadpool;
+package com.onus.demotest.threadpool
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.BlockingQueue
+import java.util.concurrent.ExecutorService
 
-public interface CVExecutorService extends ExecutorService
-{
+interface CVExecutorService : ExecutorService {
+    fun remove(command: Runnable): Boolean
 
-	boolean remove(Runnable command);
-
-	BlockingQueue<Runnable> getQueue();
+    fun getQueue(): BlockingQueue<Runnable>
 }

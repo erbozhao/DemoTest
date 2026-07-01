@@ -1,486 +1,331 @@
-package com.onus.demotest.threadpool;
+package com.onus.demotest.threadpool
 
+import android.os.Process
+import com.onus.demotest.threadpool.lib.CommandServiceManager
+import com.onus.demotest.threadpool.lib.CommandThreadFactory
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.PriorityBlockingQueue
+import java.util.concurrent.ScheduledExecutorService
+import java.util.concurrent.TimeUnit
 
-import android.os.Process;
+open class CVExecutorSupplier private constructor() {
+    @Volatile
+    private var mPictureExecutor: CVThreadPoolExecutor? = null
+    private val mPictureExecutorLock = Any()
 
-import com.onus.demotest.threadpool.lib.CommandServiceManager;
-import com.onus.demotest.threadpool.lib.CommandThreadFactory;
+    @Volatile
+    private var mHighPriorityNetworkExecutor: CVThreadPoolExecutor? = null
+    private val mHighPriorityNetworkExecutorLock = Any()
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+    @Volatile
+    private var mNetworkExecutor: CVThreadPoolExecutor? = null
+    private val mNetworkExecutorLock = Any()
 
-/**
- * Description
- *
- * @author xiandongluo
- * @see
- * @since 2020/10/10
- */
-public class CVExecutorSupplier
-{
-	private volatile static CVExecutorSupplier	sInstance							= null;
+    @Volatile
+    private var mCoreTaskExecutor: CVThreadPoolExecutor? = null
+    private val mCoreTaskExecutorLock = Any()
 
-	static int									INNER_NUM_CPU_BOUND_THREADS			= 1;
+    @Volatile
+    private var mIoExecutor: CVThreadPoolExecutor? = null
+    private val mIoExecutorLock = Any()
 
-	static int									NUM_CPU_BOUND_THREADS				= INNER_NUM_CPU_BOUND_THREADS;
+    @Volatile
+    private var mDBExecutor: CVThreadPoolExecutor? = null
+    private val mDBExecutorLock = Any()
 
-	private volatile CVThreadPoolExecutor		mPictureExecutor;
-	private final Object						mPictureExecutorLock				= new Object();
+    @Volatile
+    private var mCpuBoundExecutor: CVThreadPoolExecutor? = null
+    private val mCpuBoundExecutorLock = Any()
 
-	private volatile CVThreadPoolExecutor		mHighPriorityNetworkExecutor;
-	private final Object						mHighPriorityNetworkExecutorLock	= new Object();
+    @Volatile
+    private var mImmediateExecutor: Executor? = null
+    private val mImmediateExecutorLock = Any()
 
-	private volatile CVThreadPoolExecutor		mNetworkExecutor;
-	private final Object						mNetworkExecutorLock				= new Object();
+    @Volatile
+    private var mMainThreadExecutor: CVMainThreadExecutor? = null
+    private val mMainThreadExecutorLock = Any()
 
-	private volatile CVThreadPoolExecutor		mCoreTaskExecutor;
-	private final Object						mCoreTaskExecutorLock				= new Object();
+    @Volatile
+    private var mShortTimeExecutor: CVThreadPoolExecutor? = null
+    private val mShortTimeExecutorLock = Any()
 
-	private volatile CVThreadPoolExecutor		mIoExecutor;
-	private final Object						mIoExecutorLock						= new Object();
+    @Volatile
+    private var mLongTimeExecutor: CVThreadPoolExecutor? = null
+    private val mLongTimeExecutorLock = Any()
 
-	private volatile CVThreadPoolExecutor		mDBExecutor;
-	private final Object						mDBExecutorLock						= new Object();
+    private val mScheduledLock = Any()
+    private var mScheduledExecutor: ScheduledExecutorService? = null
 
-	private volatile CVThreadPoolExecutor		mCpuBoundExecutor;
-	private final Object						mCpuBoundExecutorLock				= new Object();
+    init {
+        CommandServiceManager.get().getCommandSupplier().init(15, 30, TimeUnit.SECONDS, null)
+        try {
+            NUM_CPU_BOUND_THREADS = Runtime.getRuntime().availableProcessors()
+        } catch (_: Throwable) {
+            NUM_CPU_BOUND_THREADS = 4
+        }
+        INNER_NUM_CPU_BOUND_THREADS = NUM_CPU_BOUND_THREADS
+        if (INNER_NUM_CPU_BOUND_THREADS < 4) {
+            INNER_NUM_CPU_BOUND_THREADS = 4
+        }
+    }
 
-	private volatile Executor					mImmediateExecutor;
-	private final Object						mImmediateExecutorLock				= new Object();
+    fun getNumOfCPUBoundThreads(): Int {
+        return NUM_CPU_BOUND_THREADS
+    }
 
-	private volatile CVMainThreadExecutor		mMainThreadExecutor;
-	private final Object						mMainThreadExecutorLock				= new Object();
+    fun getPictureExecutor(): CVExecutorService {
+        if (mPictureExecutor == null) {
+            synchronized(mPictureExecutorLock) {
+                if (mPictureExecutor == null) {
+                    mPictureExecutor = CVThreadPoolExecutor(
+                        4,
+                        CVThreadPoolExecutor.POOL_PRIORITY.DISPLAY,
+                        LinkedBlockingQueue()
+                    )
+                }
+            }
+        }
+        return mPictureExecutor!!
+    }
 
-	private volatile CVThreadPoolExecutor		mShortTimeExecutor;
-	private final Object						mShortTimeExecutorLock				= new Object();
+    fun getHighPriorityNetworkExecutor(): CVExecutorService {
+        if (mHighPriorityNetworkExecutor == null) {
+            synchronized(mHighPriorityNetworkExecutorLock) {
+                if (mHighPriorityNetworkExecutor == null) {
+                    mHighPriorityNetworkExecutor = CVThreadPoolExecutor(
+                        4,
+                        CVThreadPoolExecutor.POOL_PRIORITY.URGENT_DISPLAY,
+                        PriorityBlockingQueue(11, PriorityComparator.DEFAULT)
+                    )
+                }
+            }
+        }
+        return mHighPriorityNetworkExecutor!!
+    }
 
-	private volatile CVThreadPoolExecutor		mLongTimeExecutor;
-	private final Object						mLongTimeExecutorLock				= new Object();
+    fun getNetworkExecutor(): CVExecutorService {
+        if (mNetworkExecutor == null) {
+            synchronized(mNetworkExecutorLock) {
+                if (mNetworkExecutor == null) {
+                    mNetworkExecutor = CVThreadPoolExecutor(
+                        4,
+                        CVThreadPoolExecutor.POOL_PRIORITY.DISPLAY,
+                        PriorityBlockingQueue(11, PriorityComparator.DEFAULT)
+                    )
+                }
+            }
+        }
+        return mNetworkExecutor!!
+    }
 
-	Object										mScheduledLock						= new Object();
-	ScheduledExecutorService					mScheduledExecutor;
+    fun getCoreTaskExecutor(): CVExecutorService {
+        if (mCoreTaskExecutor == null) {
+            synchronized(mCoreTaskExecutorLock) {
+                if (mCoreTaskExecutor == null) {
+                    mCoreTaskExecutor = CVThreadPoolExecutor(INNER_NUM_CPU_BOUND_THREADS + 1, LinkedBlockingQueue())
+                }
+            }
+        }
+        return mCoreTaskExecutor!!
+    }
 
+    fun getIOTaskExecutor(): CVExecutorService {
+        if (mIoExecutor == null) {
+            synchronized(mIoExecutorLock) {
+                if (mIoExecutor == null) {
+                    mIoExecutor = CVThreadPoolExecutor(4, LinkedBlockingQueue())
+                }
+            }
+        }
+        return mIoExecutor!!
+    }
 
-	private CVExecutorSupplier()
-	{
-		CommandServiceManager.get().getCommandSupplier().init(15, 30, TimeUnit.SECONDS, null);
-		try
-		{
-			NUM_CPU_BOUND_THREADS = Runtime.getRuntime().availableProcessors();
-		}
-		catch (Throwable t)
-		{
-			NUM_CPU_BOUND_THREADS = 4;
-		}
-		INNER_NUM_CPU_BOUND_THREADS = NUM_CPU_BOUND_THREADS;
-		if (INNER_NUM_CPU_BOUND_THREADS < 4)
-		{
-			INNER_NUM_CPU_BOUND_THREADS = 4;
-		}
+    fun getDBTaskExecutor(): CVExecutorService {
+        if (mDBExecutor == null) {
+            synchronized(mDBExecutorLock) {
+                if (mDBExecutor == null) {
+                    mDBExecutor = CVThreadPoolExecutor(4, LinkedBlockingQueue())
+                }
+            }
+        }
+        return mDBExecutor!!
+    }
 
-	}
+    fun getCpuBoundExecutor(): CVExecutorService {
+        if (mCpuBoundExecutor == null) {
+            synchronized(mCpuBoundExecutorLock) {
+                if (mCpuBoundExecutor == null) {
+                    mCpuBoundExecutor = CVThreadPoolExecutor(INNER_NUM_CPU_BOUND_THREADS + 1, LinkedBlockingQueue())
+                }
+            }
+        }
+        return mCpuBoundExecutor!!
+    }
 
-	public static CVExecutorSupplier getInstance()
-	{
-		if (sInstance == null)
-		{
-			synchronized (CVExecutorSupplier.class)
-			{
-				if (sInstance == null)
-				{
-					sInstance = new CVExecutorSupplier();
-				}
-			}
-		}
-		return sInstance;
-	}
+    fun getImmediateExecutor(): Executor {
+        if (mImmediateExecutor == null) {
+            synchronized(mImmediateExecutorLock) {
+                if (mImmediateExecutor == null) {
+                    mImmediateExecutor = ImmediateExecutor()
+                }
+            }
+        }
+        return mImmediateExecutor!!
+    }
 
-	public int getNumOfCPUBoundThreads()
-	{
-		return NUM_CPU_BOUND_THREADS;
-	}
+    fun getScheduledExecutor(): ScheduledExecutorService {
+        if (mScheduledExecutor == null) {
+            synchronized(mScheduledLock) {
+                if (mScheduledExecutor == null) {
+                    mScheduledExecutor = Executors.newSingleThreadScheduledExecutor(
+                        CommandThreadFactory("Scheduled delay", Process.THREAD_PRIORITY_BACKGROUND)
+                    )
+                }
+            }
+        }
+        return mScheduledExecutor!!
+    }
 
-	/**
-	 * 图片加载线程池
-	 * 
-	 * @return
-	 */
-	public CVExecutorService getPictureExecutor()
-	{
-		if (mPictureExecutor == null)
-		{
-			synchronized (mPictureExecutorLock)
-			{
-				if (mPictureExecutor == null)
-				{
-					mPictureExecutor = new CVThreadPoolExecutor(4, CVThreadPoolExecutor.POOL_PRIORITY.DISPLAY,
-							new LinkedBlockingQueue());
-				}
-			}
-		}
-		return mPictureExecutor;
-	}
+    fun getMainThreadExecutor(): CVMainThreadExecutor {
+        if (mMainThreadExecutor == null) {
+            synchronized(mMainThreadExecutorLock) {
+                if (mMainThreadExecutor == null) {
+                    mMainThreadExecutor = CVMainThreadExecutor()
+                }
+            }
+        }
+        return mMainThreadExecutor!!
+    }
 
-	/**
-	 * 高优先级网络请求线程池，一般用于需要快速呈现给用户的网络请求
-	 * 
-	 * @return
-	 */
-	public CVExecutorService getHighPriorityNetworkExecutor()
-	{
-		if (mHighPriorityNetworkExecutor == null)
-		{
-			synchronized (mHighPriorityNetworkExecutorLock)
-			{
-				if (mHighPriorityNetworkExecutor == null)
-				{
-					mHighPriorityNetworkExecutor = new CVThreadPoolExecutor(4, CVThreadPoolExecutor.POOL_PRIORITY.URGENT_DISPLAY,
-							new PriorityBlockingQueue(11, PriorityComparator.DEFAULT));
-				}
-			}
-		}
-		return mHighPriorityNetworkExecutor;
-	}
+    fun getShortTimeExecutor(): CVExecutorService {
+        if (mShortTimeExecutor == null) {
+            synchronized(mShortTimeExecutorLock) {
+                if (mShortTimeExecutor == null) {
+                    mShortTimeExecutor = CVThreadPoolExecutor(2, LinkedBlockingQueue())
+                }
+            }
+        }
+        return mShortTimeExecutor!!
+    }
 
-	/**
-	 * 普通网络请求线程池
-	 * 
-	 * @return
-	 */
-	public CVExecutorService getNetworkExecutor()
-	{
-		if (mNetworkExecutor == null)
-		{
-			synchronized (mNetworkExecutorLock)
-			{
-				if (mNetworkExecutor == null)
-				{
-					mNetworkExecutor = new CVThreadPoolExecutor(4, CVThreadPoolExecutor.POOL_PRIORITY.DISPLAY,
-							new PriorityBlockingQueue(11, PriorityComparator.DEFAULT));
-				}
-			}
-		}
-		return mNetworkExecutor;
-	}
+    fun getLongTimeExecutor(): CVExecutorService {
+        if (mLongTimeExecutor == null) {
+            synchronized(mLongTimeExecutorLock) {
+                if (mLongTimeExecutor == null) {
+                    mLongTimeExecutor = CVThreadPoolExecutor(2, LinkedBlockingQueue())
+                }
+            }
+        }
+        return mLongTimeExecutor!!
+    }
 
-	/**
-	 * 获取核心任务线程池
-	 * 
-	 * @return
-	 */
-	public CVExecutorService getCoreTaskExecutor()
-	{
-		if (mCoreTaskExecutor == null)
-		{
-			synchronized (mCoreTaskExecutorLock)
-			{
-				if (mCoreTaskExecutor == null)
-				{
-					mCoreTaskExecutor = new CVThreadPoolExecutor(INNER_NUM_CPU_BOUND_THREADS + 1,
-							new LinkedBlockingQueue());
-				}
-			}
-		}
-		return mCoreTaskExecutor;
-	}
+    private class ImmediateExecutor : Executor {
+        private val executionDepth = ThreadLocal<Int>()
 
-	/**
-	 * 获取IO线程池
-	 *
-	 * @return
-	 */
-	public CVExecutorService getIOTaskExecutor()
-	{
-		if (mIoExecutor == null)
-		{
-			synchronized (mIoExecutorLock)
-			{
-				if (mIoExecutor == null)
-				{
-					mIoExecutor = new CVThreadPoolExecutor(4, new LinkedBlockingQueue());
-				}
-			}
-		}
-		return mIoExecutor;
-	}
+        override fun execute(command: Runnable) {
+            val depth = incrementDepth()
+            try {
+                if (depth <= MAX_DEPTH) {
+                    command.run()
+                } else {
+                    forBackgroundTasks().execute(command)
+                }
+            } finally {
+                decrementDepth()
+            }
+        }
 
-	/**
-	 * 获取IO线程池
-	 *
-	 * @return
-	 */
-	public CVExecutorService getDBTaskExecutor()
-	{
-		if (mDBExecutor == null)
-		{
-			synchronized (mDBExecutorLock)
-			{
-				if (mDBExecutor == null)
-				{
-					mDBExecutor = new CVThreadPoolExecutor(4, new LinkedBlockingQueue());
-				}
-			}
-		}
-		return mDBExecutor;
-	}
+        private fun incrementDepth(): Int {
+            var oldDepth = executionDepth.get()
+            if (oldDepth == null) {
+                oldDepth = 0
+            }
+            val newDepth = oldDepth + 1
+            executionDepth.set(newDepth)
+            return newDepth
+        }
 
-	/**
-	 * CPU线程池 针对纯运算操作（例如加解密，编解码等）
-	 * 
-	 * @return
-	 */
-	public CVExecutorService getCpuBoundExecutor()
-	{
-		if (mCpuBoundExecutor == null)
-		{
-			synchronized (mCpuBoundExecutorLock)
-			{
-				if (mCpuBoundExecutor == null)
-				{
-					mCpuBoundExecutor = new CVThreadPoolExecutor(INNER_NUM_CPU_BOUND_THREADS + 1,
-							new LinkedBlockingQueue());
-				}
-			}
-		}
-		return mCpuBoundExecutor;
-	}
+        private fun decrementDepth(): Int {
+            var oldDepth = executionDepth.get()
+            if (oldDepth == null) {
+                oldDepth = 0
+            }
+            val newDepth = oldDepth - 1
+            if (newDepth == 0) {
+                executionDepth.remove()
+            } else {
+                executionDepth.set(newDepth)
+            }
+            return newDepth
+        }
 
-	public Executor getImmediateExecutor()
-	{
-		if (mImmediateExecutor == null)
-		{
-			synchronized (mImmediateExecutorLock)
-			{
-				if (mImmediateExecutor == null)
-				{
-					mImmediateExecutor = new ImmediateExecutor();
-				}
-			}
-		}
+        companion object {
+            private const val MAX_DEPTH = 15
+        }
+    }
 
-		return mImmediateExecutor;
+    companion object {
+        @Volatile
+        private var sInstance: CVExecutorSupplier? = null
 
-	}
+        @JvmField
+        var INNER_NUM_CPU_BOUND_THREADS = 1
 
-	/**
-	 * 或区域
-	 * 
-	 * @return
-	 */
-	public ScheduledExecutorService getScheduledExecutor()
-	{
-		if (mScheduledExecutor == null)
-		{
-			synchronized (mScheduledLock)
-			{
-				if (mScheduledExecutor == null)
-				{
-					mScheduledExecutor = Executors
-							.newSingleThreadScheduledExecutor(new CommandThreadFactory("Scheduled delay", Process.THREAD_PRIORITY_BACKGROUND));
-				}
-			}
-		}
+        @JvmField
+        var NUM_CPU_BOUND_THREADS = INNER_NUM_CPU_BOUND_THREADS
 
-		return mScheduledExecutor;
-	}
+        @JvmStatic
+        fun getInstance(): CVExecutorSupplier {
+            if (sInstance == null) {
+                synchronized(CVExecutorSupplier::class.java) {
+                    if (sInstance == null) {
+                        sInstance = CVExecutorSupplier()
+                    }
+                }
+            }
+            return sInstance!!
+        }
 
-	/**
-	 * 获取主线程线程池
-	 * 
-	 * @return
-	 */
-	public CVMainThreadExecutor getMainThreadExecutor()
-	{
-		if (mMainThreadExecutor == null)
-		{
-			synchronized (mMainThreadExecutorLock)
-			{
-				if (mMainThreadExecutor == null)
-				{
-					mMainThreadExecutor = new CVMainThreadExecutor();
-				}
-			}
-		}
-		return mMainThreadExecutor;
-	}
+        @JvmStatic
+        fun forMainThreadTasks(): CVMainThreadExecutor {
+            return getInstance().getMainThreadExecutor()
+        }
 
-	/**
-	 * 短耗时任务线程池
-	 */
-	public CVExecutorService getShortTimeExecutor()
-	{
-		if (mShortTimeExecutor == null)
-		{
-			synchronized (mShortTimeExecutorLock)
-			{
-				if (mShortTimeExecutor == null)
-				{
-					mShortTimeExecutor = new CVThreadPoolExecutor(2,
-							new LinkedBlockingQueue());
-				}
-			}
-		}
-		return mShortTimeExecutor;
-	}
+        @JvmStatic
+        fun forBackgroundTasks(): CVExecutorService {
+            return getInstance().getCoreTaskExecutor()
+        }
 
-	/**
-	 * 长耗时任务线程池
-	 */
-	public CVExecutorService getLongTimeExecutor()
-	{
-		if (mLongTimeExecutor == null)
-		{
-			synchronized (mLongTimeExecutorLock)
-			{
-				if (mLongTimeExecutor == null)
-				{
-					mLongTimeExecutor = new CVThreadPoolExecutor(2,
-							new LinkedBlockingQueue());
-				}
-			}
-		}
-		return mLongTimeExecutor;
-	}
+        @JvmStatic
+        fun forDbTasks(): CVExecutorService {
+            return getInstance().getDBTaskExecutor()
+        }
 
-	/**
-	 * 针对需要在主线程执行的操作
-	 *
-	 * @return Executor
-	 */
-	public static CVMainThreadExecutor forMainThreadTasks()
-	{
-		return getInstance().getMainThreadExecutor();
-	}
+        @JvmStatic
+        fun forIoTasks(): CVExecutorService {
+            return getInstance().getIOTaskExecutor()
+        }
 
-	/**
-	 * 针对纯运算操作（例如加解密，编解码等）
-	 *
-	 * @return Executor
-	 */
-	public static CVExecutorService forBackgroundTasks()
-	{
-		return getInstance().getCoreTaskExecutor();
-	}
+        @JvmStatic
+        fun forPictureTasks(): CVExecutorService {
+            return getInstance().getPictureExecutor()
+        }
 
-	/**
-	 * 针对数据库（读写）操作
-	 *
-	 * @return Executor
-	 */
-	public static CVExecutorService forDbTasks()
-	{
-		return getInstance().getDBTaskExecutor();
-	}
+        @JvmStatic
+        fun forCoreTasks(): CVExecutorService {
+            return getInstance().getCoreTaskExecutor()
+        }
 
-	/**
-	 * 针对本地文件读写（文件或文件夹读写）操作
-	 *
-	 * @return Executor
-	 */
-	public static CVExecutorService forIoTasks()
-	{
-		return getInstance().getIOTaskExecutor();
-	}
+        @JvmStatic
+        fun forShortTimeTasks(): CVExecutorService {
+            return getInstance().getShortTimeExecutor()
+        }
 
-	/**
-	 * 图片加载
-	 * 
-	 * @return
-	 */
-	public static CVExecutorService forPictureTasks()
-	{
-		return getInstance().getPictureExecutor();
-	}
-
-	/**
-	 * 针对计算类任务
-	 *
-	 * @return Executor
-	 */
-	public static CVExecutorService forCoreTasks()
-	{
-		return getInstance().getCoreTaskExecutor();
-	}
-
-	public static CVExecutorService forShortTimeTasks()
-	{
-		return getInstance().getShortTimeExecutor();
-	}
-
-	public static CVExecutorService forLongTimeTasks()
-	{
-		return getInstance().getLongTimeExecutor();
-	}
-
-	private static class ImmediateExecutor implements Executor
-	{
-		private static final int		MAX_DEPTH		= 15;
-		private ThreadLocal<Integer>	executionDepth	= new ThreadLocal<Integer>();
-
-		/**
-		 * Increments the depth.
-		 *
-		 * @return the new depth value.
-		 */
-		private int incrementDepth()
-		{
-			Integer oldDepth = executionDepth.get();
-			if (oldDepth == null)
-			{
-				oldDepth = 0;
-			}
-			int newDepth = oldDepth + 1;
-			executionDepth.set(newDepth);
-			return newDepth;
-		}
-
-		/**
-		 * Decrements the depth.
-		 *
-		 * @return the new depth value.
-		 */
-		private int decrementDepth()
-		{
-			Integer oldDepth = executionDepth.get();
-			if (oldDepth == null)
-			{
-				oldDepth = 0;
-			}
-			int newDepth = oldDepth - 1;
-			if (newDepth == 0)
-			{
-				executionDepth.remove();
-			}
-			else
-			{
-				executionDepth.set(newDepth);
-			}
-			return newDepth;
-		}
-
-		@Override
-		public void execute(Runnable command)
-		{
-			int depth = incrementDepth();
-			try
-			{
-				if (depth <= MAX_DEPTH)
-				{
-					command.run();
-				}
-				else
-				{
-					CVExecutorSupplier.forBackgroundTasks().execute(command);
-				}
-			}
-			finally
-			{
-				decrementDepth();
-			}
-		}
-	}
+        @JvmStatic
+        fun forLongTimeTasks(): CVExecutorService {
+            return getInstance().getLongTimeExecutor()
+        }
+    }
 }

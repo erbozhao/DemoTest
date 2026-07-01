@@ -1,30 +1,17 @@
-package com.onus.demotest.threadpool;
+package com.onus.demotest.threadpool
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.Callable
+import java.util.concurrent.FutureTask
 
-/**
- * Description
- *
- * @author xiandongluo
- * @see
- * @since 2020/10/10
- */
-public class CVFutureTask<V> extends FutureTask<V>
-{
-	public Object task;
+open class CVFutureTask<V> : FutureTask<V> {
+    @JvmField
+    var task: Any
 
-	public CVFutureTask(Callable<V> callable)
-	{
-		super(callable);
-		task = callable;
-	}
+    constructor(callable: Callable<V>) : super(callable) {
+        task = callable
+    }
 
-	public CVFutureTask(Runnable runnable, V result)
-	{
-		super(runnable, result);
-		task = runnable;
-	}
-
-
+    constructor(runnable: Runnable, result: V) : super(runnable, result) {
+        task = runnable
+    }
 }

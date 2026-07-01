@@ -1,37 +1,21 @@
-package com.onus.demotest.threadpool;
+package com.onus.demotest.threadpool
 
-import android.os.Handler;
-import android.os.Looper;
+import android.os.Handler
+import android.os.Looper
+import java.util.concurrent.Executor
 
-import java.util.concurrent.Executor;
+open class CVMainThreadExecutor : Executor {
+    private val handler = Handler(Looper.getMainLooper())
 
-/**
- * UI线程线程池
- * 
- * @xiandongluo
- */
-public class CVMainThreadExecutor implements Executor
-{
-	private Handler mHandler;
+    override fun execute(command: Runnable) {
+        handler.post(command)
+    }
 
-	public CVMainThreadExecutor()
-	{
-		mHandler = new Handler(Looper.getMainLooper());
-	}
+    fun execute(command: Runnable, delay: Long) {
+        handler.postDelayed(command, delay)
+    }
 
-	@Override
-	public void execute(Runnable command)
-	{
-		mHandler.post(command);
-	}
-
-	public void execute(Runnable command, long delay)
-	{
-		mHandler.postDelayed(command, delay);
-	}
-
-	public void remove(Runnable command)
-	{
-		mHandler.removeCallbacks(command);
-	}
+    fun remove(command: Runnable) {
+        handler.removeCallbacks(command)
+    }
 }

@@ -1,17 +1,9 @@
-package com.onus.demotest.threadpool.lib;
+package com.onus.demotest.threadpool.lib
 
-import android.os.SystemClock;
+import android.os.SystemClock
 
-/**
- * Created by niuniuyang on 2020-07-11. Description
- *
- * 用于单测的mock
- */
-public class SystemTimeProvider
-{
-
-	public long currentTime()
-	{
-		return SystemClock.elapsedRealtime();
-	}
+open class SystemTimeProvider {
+    open fun currentTime(): Long {
+        return SystemClock.elapsedRealtime()
+    }
 }

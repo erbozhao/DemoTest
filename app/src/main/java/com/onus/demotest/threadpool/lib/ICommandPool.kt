@@ -1,52 +1,19 @@
-package com.onus.demotest.threadpool.lib;
+package com.onus.demotest.threadpool.lib
 
-/**
- * Created by niuniuyang on 2020-06-14. Description
- */
-interface ICommandPool extends Comparable<ICommandPool>
-{
+interface ICommandPool : Comparable<ICommandPool> {
+    fun takeWaitingCommand(): Command?
 
-	/**
-	 * 任务执行完毕后，会向{@link CommandPool 获取正在等待执行的任务}
-	 */
-	Command takeWaitingCommand();
+    fun onCmdExecuted(command: Command)
 
-	/**
-	 * 任务执行完毕后，会通知CommandPool，修改{@link CommandPool# runningCount}
-	 */
-	void onCmdExecuted(Command command);
+    fun getMaximumThreadSize(): Int
 
-	/**
-	 * 每一个{@link CommandPool} 都会有一个最大线程数量，
-	 *
-	 * 用于{@link CommandThreadPoolExecutor#registerCommandPool(ICommandPool)}
-	 *
-	 * 工作线程池的动态扩容
-	 */
-	int getMaximumThreadSize();
+    fun onReject(command: Command)
 
-	/**
-	 * 任务被拒绝，shutDown的时候，可能有任务还未执行
-	 */
-	void onReject(Command command);
+    fun getName(): String?
 
-	/**
-	 * 返回任务池的名字
-	 */
-	String getName();
+    fun beforeExecute(command: Command)
 
-	/**
-	 * 执行前的通知，主要用于数据上报
-	 */
-	void beforeExecute(Command command);
+    fun afterExecute(command: Command)
 
-	/**
-	 * 执行完成后的通知，主要用于数据上报
-	 */
-	void afterExecute(Command command);
-
-	/**
-	 * 任务池已经终止
-	 */
-	boolean isTerminated();
+    fun isTerminated(): Boolean
 }

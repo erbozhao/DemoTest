@@ -1,64 +1,39 @@
-package com.onus.demotest.threadpool;
+package com.onus.demotest.threadpool
 
-import java.util.Comparator;
+import java.util.Comparator
 
-/**
- * Description
- *
- * @author xiandongluo
- * @see
- * @since 2020/10/10
- */
-public class PriorityComparator implements Comparator
-{
+open class PriorityComparator : Comparator<Any> {
+    override fun compare(o1: Any?, o2: Any?): Int {
+        if (o1 == null || o2 == null) {
+            return 0
+        }
 
-	public static final PriorityComparator DEFAULT = new PriorityComparator();
+        var o1Obj: Any = o1
+        if (o1 is CVFutureTask<*>) {
+            o1Obj = o1.task
+        }
 
-	@Override
-	public int compare(Object o1, Object o2)
-	{
-		if (o1 == null || o1 == null)
-		{
-			return 0;
-		}
+        var o2Obj: Any = o2 ?: return 0
+        if (o2 is CVFutureTask<*>) {
+            o2Obj = o2.task
+        }
 
-		Object o1Obj = o1;
-		if (o1 instanceof CVFutureTask)
-		{
-			o1Obj = ((CVFutureTask) o1).task;
-		}
+        val leftObj = if (o1Obj is PriorityComparable) o1Obj else null
+        val rightObj = if (o2Obj is PriorityComparable) o2Obj else null
+        val leftPriority = leftObj?.priority() ?: PriorityComparable.Priority.NORMAL
+        val rightPriority = rightObj?.priority() ?: PriorityComparable.Priority.NORMAL
 
-		Object o2Obj = o2;
-		if (o2 instanceof CVFutureTask)
-		{
-			o2Obj = ((CVFutureTask) o2).task;
-		}
+        return if (leftPriority == rightPriority) {
+            val leftSequence = leftObj?.sequence() ?: 0
+            val rightSequence = rightObj?.sequence() ?: 0
+            leftSequence - rightSequence
+        } else {
+            rightPriority.ordinal - leftPriority.ordinal
+        }
+    }
 
-
-		PriorityComparable leftObj = null;
-		PriorityComparable rightObj = null;
-		if (o1Obj instanceof PriorityComparable)
-		{
-			leftObj = (PriorityComparable) o1Obj;
-		}
-
-
-		if (o2Obj instanceof PriorityComparable)
-		{
-			rightObj = (PriorityComparable) o2Obj;
-		}
-		PriorityComparable.Priority leftPriority = (leftObj == null ? PriorityComparable.Priority.NORMAL : leftObj.priority());
-		PriorityComparable.Priority rightPriority = (rightObj == null ? PriorityComparable.Priority.NORMAL : rightObj.priority());
-
-		if (leftPriority == rightPriority)
-		{
-			int leftSequence = leftObj == null ? 0 : leftObj.sequence();
-			int rightSequence = rightObj == null ? 0 : rightObj.sequence();
-			return leftSequence - rightSequence;
-		}
-		else
-		{
-			return rightPriority.ordinal() - leftPriority.ordinal();
-		}
-	}
+    companion object {
+        @JvmField
+        val DEFAULT = PriorityComparator()
+    }
 }

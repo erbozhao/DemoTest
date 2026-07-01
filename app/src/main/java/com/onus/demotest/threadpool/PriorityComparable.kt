@@ -1,28 +1,14 @@
-package com.onus.demotest.threadpool;
+package com.onus.demotest.threadpool
 
-/**
- * Description
- *
- * @author xiandongluo
- * @see
- * @since 2020/10/10
- */
-public interface PriorityComparable
-{
+interface PriorityComparable {
+    enum class Priority {
+        LOW,
+        NORMAL,
+        HIGH,
+        IMMEDIATE
+    }
 
-	/**
-	 * Priority values. Requests will be processed from higher priorities to
-	 * lower priorities, in FIFO order.
-	 */
-	enum Priority
-	{
-		LOW,
-		NORMAL,
-		HIGH,
-		IMMEDIATE
-	}
+    fun priority(): Priority
 
-	Priority priority();
-
-	int sequence();
+    fun sequence(): Int
 }

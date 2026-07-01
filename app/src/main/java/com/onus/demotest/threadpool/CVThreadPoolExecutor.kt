@@ -1,194 +1,121 @@
-package com.onus.demotest.threadpool;
+package com.onus.demotest.threadpool
 
-import android.util.Log;
+import android.util.Log
+import com.onus.demotest.threadpool.lib.CommandPool
+import com.onus.demotest.threadpool.lib.CommandRejectedExecutionHandler
+import com.onus.demotest.threadpool.lib.CommandServiceManager
+import com.onus.demotest.threadpool.lib.ICommandListener
+import java.util.concurrent.AbstractExecutorService
+import java.util.concurrent.BlockingQueue
+import java.util.concurrent.Callable
+import java.util.concurrent.RunnableFuture
+import java.util.concurrent.TimeUnit
 
-import com.onus.demotest.threadpool.lib.CommandPool;
-import com.onus.demotest.threadpool.lib.CommandRejectedExecutionHandler;
-import com.onus.demotest.threadpool.lib.CommandServiceManager;
-import com.onus.demotest.threadpool.lib.ICommandListener;
+open class CVThreadPoolExecutor(
+    maximumPoolSize: Int,
+    priority: POOL_PRIORITY,
+    workQueue: BlockingQueue<Runnable>,
+    handler: CVRejectedExecutionHandler
+) : AbstractExecutorService(), CVExecutorService {
+    enum class POOL_PRIORITY {
+        URGENT_DISPLAY,
+        DISPLAY,
+        BACKGROUND
+    }
 
-import java.util.List;
-import java.util.concurrent.AbstractExecutorService;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
-import java.util.concurrent.RunnableFuture;
-import java.util.concurrent.TimeUnit;
+    private var mCommandPool: CommandPool
+    private var mWorkQueue: BlockingQueue<Runnable>
 
-/**
- * Description
- *
- * @author xiandongluo
- * @see
- * @since 2020/11/4
- */
-public class CVThreadPoolExecutor extends AbstractExecutorService implements CVExecutorService
-{
+    init {
+        mWorkQueue = workQueue
+        mCommandPool = CommandServiceManager.get().getCommandSupplier()
+            .applyCommandPool(maximumPoolSize, priority.ordinal)
+        mCommandPool.setCommandQueue(workQueue)
+        mCommandPool.setExecutionHandler(CommandExecutionHandler(this, handler))
+    }
 
-	public enum POOL_PRIORITY
-	{
-		/**
-		 * 最高优先级，定义为UI及时相关的逻辑，如：用户等待中的请求等
-		 */
-		URGENT_DISPLAY,
-		/**
-		 * UI展示的第二优先级，主要场景为不影响用户主场景使用的逻辑，如：图片加载
-		 */
-		DISPLAY,
-		/**
-		 * 其它低优先级逻辑
-		 */
-		BACKGROUND
-	}
+    constructor(maximumPoolSize: Int, workQueue: BlockingQueue<Runnable>) : this(
+        maximumPoolSize,
+        POOL_PRIORITY.BACKGROUND,
+        workQueue,
+        defaultHandler
+    )
 
-	private CommandPool								mCommandPool;
+    constructor(maximumPoolSize: Int, priority: POOL_PRIORITY, workQueue: BlockingQueue<Runnable>) : this(
+        maximumPoolSize,
+        priority,
+        workQueue,
+        defaultHandler
+    )
 
-	private BlockingQueue							mWorkQueue;
+    fun setCommandListener(commandListener: ICommandListener?) {
+        mCommandPool.setCommandListener(commandListener)
+    }
 
-	/**
-	 * The default rejected execution handler.
-	 */
-	private static final CVRejectedExecutionHandler	defaultHandler	= new CVRejectedExecutionHandler()
-																	{
-																		@Override
-																		public void rejectedExecution(Runnable r, CVThreadPoolExecutor executor)
-																		{
-																			Log.d("ExecutionHandler", "rejectedExecution: " + r + ", executor: " + executor);
-																		}
-																	};
+    fun enablePerformanceMonitor(performanceMonitor: Boolean) {
+        mCommandPool.enablePerformanceMonitor(performanceMonitor)
+    }
 
+    override fun shutdown() {
+        mCommandPool.shutdown()
+    }
 
-	/**
-	 * @param maximumPoolSize --- 最大并发数
-	 * @param workQueue --- 工作队列
-	 */
-	public CVThreadPoolExecutor(int maximumPoolSize, BlockingQueue<Runnable> workQueue)
-	{
-		this(maximumPoolSize, POOL_PRIORITY.BACKGROUND, workQueue);
-	}
+    override fun shutdownNow(): List<Runnable> {
+        return mCommandPool.shutdownNow()
+    }
 
-	/**
-	 *
-	 * @param maximumPoolSize --- 最大并发数
-	 * @param priority --- 线程池优先级
-	 * @param workQueue --- 工作队列
-	 */
-	public CVThreadPoolExecutor(int maximumPoolSize, POOL_PRIORITY priority, BlockingQueue<Runnable> workQueue)
-	{
-		this(maximumPoolSize, priority, workQueue, defaultHandler);
-	}
+    override fun isShutdown(): Boolean {
+        return mCommandPool.isShutdown
+    }
 
-	public CVThreadPoolExecutor(int maximumPoolSize, POOL_PRIORITY priority, BlockingQueue<Runnable> workQueue, CVRejectedExecutionHandler handler)
-	{
-		if (workQueue == null || handler == null)
-			throw new NullPointerException();
-		mWorkQueue = workQueue;
-		mCommandPool = CommandServiceManager.get().getCommandSupplier().applyCommandPool(maximumPoolSize, priority.ordinal());
-		mCommandPool.setCommandQueue(workQueue);
-		mCommandPool.setExecutionHandler(new CommandExecutionHandler(this, handler));
-	}
+    override fun isTerminated(): Boolean {
+        return mCommandPool.isTerminated
+    }
 
+    @Throws(InterruptedException::class)
+    override fun awaitTermination(timeout: Long, unit: TimeUnit): Boolean {
+        return mCommandPool.awaitTermination(timeout, unit)
+    }
 
-	public void setCommandListener(ICommandListener commandListener)
-	{
-		if (mCommandPool != null)
-		{
-			mCommandPool.setCommandListener(commandListener);
-		}
-	}
+    override fun execute(command: Runnable) {
+        if (mCommandPool.isPerformanceMonitor()) {
+            mCommandPool.execute(PerformanceRunnable(command))
+        } else {
+            mCommandPool.execute(command)
+        }
+    }
 
-	public void enablePerformanceMonitor(boolean performanceMonitor)
-	{
-		if (mCommandPool != null)
-		{
-			mCommandPool.enablePerformanceMonitor(performanceMonitor);
-		}
-	}
+    override fun <T> newTaskFor(callable: Callable<T>): RunnableFuture<T> {
+        return CVFutureTask(callable)
+    }
 
-	@Override
-	public void shutdown()
-	{
-		mCommandPool.shutdown();
-	}
+    override fun <T> newTaskFor(runnable: Runnable, value: T): RunnableFuture<T> {
+        return CVFutureTask(runnable, value)
+    }
 
-	@Override
-	public List<Runnable> shutdownNow()
-	{
-		return mCommandPool.shutdownNow();
-	}
+    override fun remove(command: Runnable): Boolean {
+        return mCommandPool.remove(command)
+    }
 
-	@Override
-	public boolean isShutdown()
-	{
-		return mCommandPool.isShutdown();
-	}
+    override fun getQueue(): BlockingQueue<Runnable> {
+        return mWorkQueue
+    }
 
-	@Override
-	public boolean isTerminated()
-	{
-		return mCommandPool.isTerminated();
-	}
+    private class CommandExecutionHandler(
+        private val mExecutor: CVThreadPoolExecutor,
+        private val mHandler: CVRejectedExecutionHandler?
+    ) : CommandRejectedExecutionHandler {
+        override fun rejectedExecution(r: Runnable, commandPool: CommandPool) {
+            mHandler?.rejectedExecution(r, mExecutor)
+        }
+    }
 
-	@Override
-	public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException
-	{
-		return mCommandPool.awaitTermination(timeout, unit);
-	}
-
-	@Override
-	public void execute(Runnable command)
-	{
-		if (mCommandPool.isPerformanceMonitor()) {
-			mCommandPool.execute(new PerformanceRunnable(command));
-		}else{
-			mCommandPool.execute(command);
-		}
-	}
-
-	@Override
-	protected <T> RunnableFuture<T> newTaskFor(Callable<T> callable)
-	{
-		return new CVFutureTask<>(callable);
-	}
-
-	@Override
-	protected <T> RunnableFuture<T> newTaskFor(Runnable runnable, T value)
-	{
-		return new CVFutureTask<T>(runnable, value);
-	}
-
-	@Override
-	public boolean remove(Runnable command)
-	{
-		return mCommandPool.remove(command);
-	}
-
-	@Override
-	public BlockingQueue<Runnable> getQueue()
-	{
-		return mWorkQueue;
-	}
-
-	private static class CommandExecutionHandler implements CommandRejectedExecutionHandler
-	{
-
-		private CVRejectedExecutionHandler	mHandler;
-		private CVThreadPoolExecutor		mExecutor;
-
-		public CommandExecutionHandler(CVThreadPoolExecutor executor, CVRejectedExecutionHandler handler)
-		{
-			this.mHandler = handler;
-			this.mExecutor = executor;
-		}
-
-		@Override
-		public void rejectedExecution(Runnable r, CommandPool commandPool)
-		{
-			if (mHandler != null)
-			{
-				mHandler.rejectedExecution(r, mExecutor);
-			}
-		}
-	}
-
-
+    companion object {
+        @JvmField
+        val defaultHandler: CVRejectedExecutionHandler = object : CVRejectedExecutionHandler {
+            override fun rejectedExecution(r: Runnable, executor: CVThreadPoolExecutor) {
+                Log.d("ExecutionHandler", "rejectedExecution: $r, executor: $executor")
+            }
+        }
+    }
 }

@@ -1,39 +1,27 @@
-package com.onus.demotest.threadpool.lib;
+package com.onus.demotest.threadpool.lib
 
-/**
- * Created by niuniuyang on 2020-07-11. Description
- *
- * 用于任务执行对数据收集，数据监控和评估使用
- */
-public class CommandPerformanceData
-{
+open class CommandPerformanceData {
+    @JvmField
+    var startExeTime: Long = 0
 
-	public long	startExeTime	= 0;
-	public long	queueTime		= 0;
-	public long	completeTime	= 0;
-	public int	maxRunningCount	= 0;	//并发任务数的峰值，也是对于线程并发消耗的峰值
+    @JvmField
+    var queueTime: Long = 0
 
-	/**
-	 * 任务排队耗时,单位ms
-	 */
-	public long getQueueTimeCost()
-	{
-		return startExeTime - queueTime;
-	}
+    @JvmField
+    var completeTime: Long = 0
 
-	/**
-	 * 任务执行耗时,单位ms
-	 */
-	public long getExeTimeCost()
-	{
-		return completeTime - startExeTime;
-	}
+    @JvmField
+    var maxRunningCount: Int = 0
 
-	/**
-	 * 任务完成总耗时，单位ms
-	 */
-	public long getTotalTimeCost()
-	{
-		return completeTime - queueTime;
-	}
+    fun getQueueTimeCost(): Long {
+        return startExeTime - queueTime
+    }
+
+    fun getExeTimeCost(): Long {
+        return completeTime - startExeTime
+    }
+
+    fun getTotalTimeCost(): Long {
+        return completeTime - queueTime
+    }
 }

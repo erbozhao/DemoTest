@@ -1,136 +1,72 @@
-package com.onus.demotest.threadpool.lib;
+package com.onus.demotest.threadpool.lib
 
-import java.util.concurrent.locks.AbstractQueuedSynchronizer;
+import java.util.concurrent.locks.AbstractQueuedSynchronizer
 
-/**
- * Created by niuniuyang on 2020-8-10. Description
- *
- * Class Worker mainly maintains interrupt control state for threads running
- * tasks, along with other
- * minor bookkeeping. This class opportunistically extends
- * AbstractQueuedSynchronizer to simplify
- * acquiring and releasing a lock surrounding each task execution. This protects
- * against interrupts
- * that are intended to wake up a worker thread waiting for a task from instead
- * interrupting a task
- * being run. We implement a simple non-reentrant mutual exclusion lock rather
- * than use
- * ReentrantLock because we do not want worker tasks to be able to reacquire the
- * lock when they
- * invoke pool control methods like setCorePoolSize. Additionally, to suppress
- * interrupts until the
- * thread actually starts running tasks, we initialize lock state to a negative
- * value, and clear it
- * upon start (in runWorker).
- */
+class Worker(
+    private val commandThreadPoolExecutor: CommandThreadPoolExecutor,
+    @JvmField var firstTask: Command?
+) : AbstractQueuedSynchronizer(), Runnable {
+    @JvmField
+    val thread: Thread = commandThreadPoolExecutor.getThreadFactory().newThread(this)
 
-final class Worker extends AbstractQueuedSynchronizer implements Runnable
-{
+    @Volatile
+    @JvmField
+    var completedTasks: Long = 0
 
-	/**
-	 * This class will never be serialized, but we provide a serialVersionUID to
-	 * suppress a javac
-	 * warning.
-	 */
-	private static final long			serialVersionUID	= 6138294804551838833L;
-	/**
-	 * Thread this worker is running in. Null if factory fails.
-	 */
-	final Thread						thread;
-	/**
-	 * Initial task to run. Possibly null.
-	 */
-	Command								firstTask;
-	/**
-	 * Per-thread task counter
-	 */
-	volatile long						completedTasks;
-	private CommandThreadPoolExecutor	commandThreadPoolExecutor;
+    init {
+        state = -1
+    }
 
-	/**
-	 * Creates with given first task and thread from ThreadFactory.
-	 *
-	 * @param firstTask the first task (null if none)
-	 */
-	Worker(CommandThreadPoolExecutor commandThreadPoolExecutor, Command firstTask)
-	{
-		this.commandThreadPoolExecutor = commandThreadPoolExecutor;
-		setState(-1); // inhibit interrupts until runWorker
-		this.firstTask = firstTask;
-		this.thread = commandThreadPoolExecutor.getThreadFactory().newThread(this);
-	}
+    override fun run() {
+        commandThreadPoolExecutor.runWorker(this)
+    }
 
-	/**
-	 * Delegates main run loop to outer runWorker.
-	 */
-	public void run()
-	{
-		commandThreadPoolExecutor.runWorker(this);
-	}
-	// Lock methods
-	//
-	// The value 0 represents the unlocked state.
+    override fun isHeldExclusively(): Boolean {
+        return state != 0
+    }
 
-	// The value 1 represents the locked state.
+    override fun tryAcquire(unused: Int): Boolean {
+        return if (compareAndSetState(0, 1)) {
+            exclusiveOwnerThread = Thread.currentThread()
+            true
+        } else {
+            false
+        }
+    }
 
-	protected boolean isHeldExclusively()
-	{
-		return getState() != 0;
-	}
+    override fun tryRelease(unused: Int): Boolean {
+        exclusiveOwnerThread = null
+        state = 0
+        return true
+    }
 
-	/**
-	 * 这里只是try，并不一定能成功，当前的state是0，就会成功，否则就失败
-	 */
-	protected boolean tryAcquire(int unused)
-	{
-		if (compareAndSetState(0, 1))
-		{
-			setExclusiveOwnerThread(Thread.currentThread());
-			return true;
-		}
-		return false;
-	}
+    fun lock() {
+        acquire(1)
+    }
 
-	protected boolean tryRelease(int unused)
-	{
-		setExclusiveOwnerThread(null);
-		setState(0);
-		return true;
-	}
+    fun tryLock(): Boolean {
+        return tryAcquire(1)
+    }
 
-	void lock()
-	{
-		acquire(1);
-	}
+    fun unlock() {
+        release(1)
+    }
 
-	boolean tryLock()
-	{
-		return tryAcquire(1);
-	}
+    fun isLocked(): Boolean {
+        return isHeldExclusively
+    }
 
-	void unlock()
-	{
-		release(1);
-	}
+    fun interruptIfStarted() {
+        val currentThread = thread
+        if (state >= 0 && !currentThread.isInterrupted) {
+            try {
+                currentThread.interrupt()
+            } catch (_: SecurityException) {
+            }
+        }
+    }
 
-	boolean isLocked()
-	{
-		return isHeldExclusively();
-	}
-
-	void interruptIfStarted()
-	{
-		Thread t;
-		if (getState() >= 0 && (t = thread) != null && !t.isInterrupted())
-		{
-			try
-			{
-				t.interrupt();
-			}
-			catch (SecurityException ignore)
-			{
-				//do nothing
-			}
-		}
-	}
+    companion object {
+        private const val serialVersionUID: Long = 6138294804551838833L
+    }
 }
