@@ -39,6 +39,7 @@ import com.onus.demotest.feature.ui.tab.TabActivity
 import com.onus.demotest.feature.ui.FrameActivity
 import com.onus.demotest.feature.ui.draglist.DragListActivity
 import com.onus.demotest.feature.video.VideoActivity
+import com.onus.demotest.feature.foldable.FoldableDemoActivity
 import com.onus.demotest.service.EventMessage
 import com.onus.demotest.core.thread.IThreadHandlerFactory
 import com.onus.demotest.common.CommonUtils
@@ -210,6 +211,13 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button?>(R.id.tmpTest3)?.setOnClickListener {
             TestUtils.testTarget34(applicationContext)
+        }
+
+        findViewById<Button?>(R.id.foldableDemo)?.setOnClickListener {
+            startActivity(
+                Intent(this, FoldableDemoActivity::class.java)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            )
         }
 
         // WhatsApp相关测试

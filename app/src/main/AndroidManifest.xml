@@ -61,6 +61,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/ActivityMain">
+        <property
+            android:name="android.window.PROPERTY_ACTIVITY_EMBEDDING_SPLITS_ENABLED"
+            android:value="true" />
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="${applicationId}.FoldableSplitInitializer"
+                android:value="androidx.startup" />
+        </provider>
+
         <activity
             android:name=".app.MainActivity"
             android:alwaysRetainTaskState="true"
@@ -78,6 +92,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".feature.foldable.FoldableDemoActivity"
+            android:exported="false"
+            android:resizeableActivity="true"
+            android:taskAffinity="com.onus.demotest.pages.FoldableDemo"
+            android:theme="@style/Theme.DemoTest.Foldable" />
+
+        <activity
+            android:name=".feature.foldable.embedding.FoldableEmbeddingPrimaryActivity"
+            android:exported="false"
+            android:resizeableActivity="true"
+            android:taskAffinity="com.onus.demotest.pages.FoldableDemo"
+            android:theme="@style/Theme.DemoTest.Foldable" />
+
+        <activity
+            android:name=".feature.foldable.embedding.FoldableEmbeddingSecondaryActivity"
+            android:exported="false"
+            android:resizeableActivity="true"
+            android:taskAffinity="com.onus.demotest.pages.FoldableDemo"
+            android:theme="@style/Theme.DemoTest.Foldable" />
 
         <activity
             android:name=".feature.whatsapp.AllStatusActivity"

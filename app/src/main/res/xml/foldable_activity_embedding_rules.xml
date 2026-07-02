@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:window="http://schemas.android.com/apk/res-auto">
+    <SplitPairRule
+        window:clearTop="true"
+        window:finishPrimaryWithSecondary="never"
+        window:finishSecondaryWithPrimary="always"
+        window:splitMinWidthDp="600"
+        window:splitRatio="0.35">
+        <SplitPairFilter
+            window:primaryActivityName=".feature.foldable.embedding.FoldableEmbeddingPrimaryActivity"
+            window:secondaryActivityName=".feature.foldable.embedding.FoldableEmbeddingSecondaryActivity" />
+    </SplitPairRule>
+</resources>

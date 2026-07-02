@@ -169,6 +169,10 @@ kotlin {
 dependencies {
     implementation("androidx.core:core-ktx:1.17.0")
     implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
+    implementation("androidx.slidingpanelayout:slidingpanelayout:1.2.0")
+    implementation("androidx.window:window:1.5.1")
+    implementation("androidx.startup:startup-runtime:1.2.0")
     implementation("com.google.android.material:material:1.13.0")
     implementation("androidx.lifecycle:lifecycle-service:2.10.0")
     implementation("androidx.webkit:webkit:1.14.0")
