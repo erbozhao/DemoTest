@@ -105,6 +105,7 @@ class FoldableDemoActivity : AppCompatActivity() {
         contentContainer.removeAllViews()
         val view = when (type) {
             FoldableDemoType.LIST_DETAIL -> ListDetailDemoView(this)
+            FoldableDemoType.LIST_DETAIL_SLIDING -> ListDetailDemoView2(this)
             FoldableDemoType.FEED -> FeedDemoView(this)
             FoldableDemoType.FILES -> FilesDemoView(this)
             FoldableDemoType.SUPPORTING_PANE -> SupportingPaneDemoView(this)

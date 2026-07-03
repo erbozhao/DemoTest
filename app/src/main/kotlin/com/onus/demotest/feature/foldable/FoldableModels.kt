@@ -9,6 +9,7 @@ data class FoldableItem(
 
 enum class FoldableDemoType(val title: String) {
     LIST_DETAIL("ListDetail"),
+    LIST_DETAIL_SLIDING("ListDetail2"),
     FEED("Feed"),
     FILES("Files"),
     SUPPORTING_PANE("SupportingPane"),
