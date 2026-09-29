@@ -106,6 +106,30 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="About Ad Test:"
+            android:textColor="@color/black"
+            android:textSize="@dimen/dp_16"
+            android:typeface="normal" />
+
+        <Button
+            android:id="@+id/adDemo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="adDemo"
+            android:textAllCaps="false"
+            android:textSize="12dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="About WhatsApp Test: "
             android:textColor="@color/black"
             android:textSize="@dimen/dp_16"

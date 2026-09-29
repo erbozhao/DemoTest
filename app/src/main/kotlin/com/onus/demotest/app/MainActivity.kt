@@ -40,6 +40,7 @@ import com.onus.demotest.feature.ui.FrameActivity
 import com.onus.demotest.feature.ui.draglist.DragListActivity
 import com.onus.demotest.feature.video.VideoActivity
 import com.onus.demotest.feature.foldable.FoldableDemoActivity
+import com.onus.demotest.feature.ad.AdDemoActivity
 import com.onus.demotest.service.EventMessage
 import com.onus.demotest.core.thread.IThreadHandlerFactory
 import com.onus.demotest.common.CommonUtils
@@ -178,6 +179,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initListener(){
+        findViewById<Button?>(R.id.adDemo)?.setOnClickListener {
+            startActivity(Intent(this, AdDemoActivity::class.java))
+        }
+
         // 临时测试
         findViewById<Button?>(R.id.tmpTest)?.setOnClickListener {
             // TestUtils.testTimeVersion()

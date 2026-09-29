@@ -77,6 +77,11 @@
         </activity>
 
         <activity
+            android:name=".feature.ad.AdDemoActivity"
+            android:exported="false"
+            android:theme="@style/ActivityMain" />
+
+        <activity
             android:name=".feature.foldable.FoldableDemoActivity"
             android:exported="false"
             android:resizeableActivity="true"
