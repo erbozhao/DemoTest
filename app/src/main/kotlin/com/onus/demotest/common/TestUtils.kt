@@ -28,7 +28,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.security.MessageDigest
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 import java.util.concurrent.CountDownLatch
 
 /**
@@ -103,6 +105,32 @@ object TestUtils {
             "calendar1=${calendar1.timeInMillis / stepTime3}  calendar2=${calendar2.timeInMillis / stepTime3}  calendar3=${calendar3.timeInMillis / stepTime3}  " +
                 "calendar4=${calendar4.timeInMillis / stepTime3}  calendar5=${calendar5.timeInMillis / stepTime3}"
         )
+    }
+
+    fun testTimeVersion2() {
+        val currentTime = System.currentTimeMillis()
+        val calendar = Calendar.getInstance()
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.US)
+
+        for (dayOffset in -50..50) {
+            calendar.timeInMillis = currentTime
+            calendar.add(Calendar.DAY_OF_YEAR, dayOffset)
+            val timestamp = calendar.timeInMillis
+            val version = normalizeVersion(timestamp)
+            Log.d(
+                "onuszhao",
+                "dayOffset=$dayOffset time=${formatter.format(calendar.time)} timestamp=$timestamp normalizeVersion=$version"
+            )
+        }
+    }
+
+    private fun normalizeVersion(systemTime: Long): Long {
+        val calendar1 = Calendar.getInstance().apply { timeInMillis = systemTime }
+        calendar1.set(Calendar.HOUR_OF_DAY, 0)
+        calendar1.set(Calendar.MINUTE, 0)
+        calendar1.set(Calendar.SECOND, 0)
+        calendar1.set(Calendar.MILLISECOND, 0)
+        return calendar1.timeInMillis / (30 * DateUtils.DAY_IN_MILLIS)
     }
 
     fun testJsonPares() {

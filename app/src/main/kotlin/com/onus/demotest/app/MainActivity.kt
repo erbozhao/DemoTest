@@ -186,9 +186,10 @@ class MainActivity : AppCompatActivity() {
         // 临时测试
         findViewById<Button?>(R.id.tmpTest)?.setOnClickListener {
             // TestUtils.testTimeVersion()
+            TestUtils.testTimeVersion2()
             // TestUtils.testJsonPares()
             // TestUtils.testListToStr()
-            TestUtils.testListEqual()
+            // TestUtils.testListEqual()
         }
 
         findViewById<Button?>(R.id.tmpTest1)?.setOnClickListener {
