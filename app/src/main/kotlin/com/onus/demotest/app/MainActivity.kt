@@ -36,6 +36,7 @@ import com.onus.demotest.feature.notification.NotifyDemoActivity
 import com.onus.demotest.feature.notification.PostNotificationActivity
 import com.onus.demotest.feature.ui.DialogActivity
 import com.onus.demotest.feature.webview.WebViewActivity
+import com.onus.demotest.feature.webview.PasswordWebsiteActivity
 import com.onus.demotest.feature.ui.tab.TabActivity
 import com.onus.demotest.feature.ui.FrameActivity
 import com.onus.demotest.feature.ui.draglist.DragListActivity
@@ -180,6 +181,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initListener(){
+
+        findViewById<Button>(R.id.passwordWebsiteDemo).setOnClickListener {
+            startActivity(Intent(this, PasswordWebsiteActivity::class.java))
+        }
+
         findViewById<Button>(R.id.localeSkinDemo).setOnClickListener {
             startActivity(Intent(this, LocaleSkinDemoActivity::class.java))
         }

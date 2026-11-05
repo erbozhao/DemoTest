@@ -18,4 +18,23 @@
     <string name="locale_skin_secondary_title">Second page: language &amp; skin</string>
     <string name="locale_skin_open_secondary">Open second page</string>
     <string name="locale_skin_back">Back to first page</string>
+
+    <string translatable="false" name="password_demo_website_no_autofill_hint">已关闭本页系统自动填充</string>
+    <string translatable="false" name="password_demo_website">真实网页验证</string>
+    <string translatable="false" name="password_demo_refresh">刷新</string>
+    <string translatable="false" name="password_demo_test_site">演示登录页</string>
+    <string translatable="false" name="password_demo_load">加载</string>
+    <string translatable="false" name="password_demo_address">输入或选择 HTTPS 网址</string>
+    <string translatable="false" name="password_demo_https_only">请输入完整 HTTPS 地址，不支持其他协议或含用户信息的网址。</string>
+    <string translatable="false" name="password_demo_loading">正在加载…</string>
+    <string translatable="false" name="password_demo_load_failed">网页加载失败，请检查网络、网址或证书后重试。</string>
+    <string translatable="false" name="password_demo_website_hint">已开启本页系统自动填充</string>
+    <string translatable="false" name="password_demo_back">返回</string>
+    <string translatable="false" name="password_demo_status_unsupported">系统 Autofill 需要 Android 8.0 或更高版本。</string>
+    <string translatable="false" name="password_demo_autofill_switch">允许系统自动填充</string>
+    <string translatable="false" name="password_demo_settings">自动填充设置</string>
+    <string translatable="false" name="password_demo_settings_unavailable">此设备未提供设置入口。</string>
+    <string translatable="false" name="password_demo_intro">先选择密码管理器，再登录网页测试保存与填充。</string>
+    <string translatable="false" name="password_demo_switch_note">切换会重载网页并清空输入及历史，不删除已保存密码。</string>
+    <string translatable="false" name="password_demo_recommended_sites">选择推荐测试网站</string>
 </resources>

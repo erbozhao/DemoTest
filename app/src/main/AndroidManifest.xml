@@ -170,6 +170,13 @@
         </provider>
 
         <activity
+            android:name=".feature.webview.PasswordWebsiteActivity"
+            android:exported="false"
+            android:label="@string/password_demo_website"
+            android:theme="@style/Theme.DemoTest"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".feature.webview.WebViewActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="locale|keyboardHidden|navigation|orientation|uiMode|screenSize|fontScale|screenLayout|smallestScreenSize|density"
