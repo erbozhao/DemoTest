@@ -370,13 +370,12 @@ class PasswordWebsiteActivity : AppCompatActivity() {
         private const val DEFAULT_URL = "https://the-internet.herokuapp.com/login"
         private val RECOMMENDED_SITES = listOf(
             RecommendedSite("The Internet · 登录测试", DEFAULT_URL),
-            RecommendedSite("Practice Test Automation · 登录测试",
-                "https://practicetestautomation.com/practice-test-login/"),
             RecommendedSite("Authentication Test · 表单登录",
                 "https://authenticationtest.com/simpleFormAuth/"),
-            RecommendedSite("163 邮箱", "https://mail.163.com/"),
-            RecommendedSite("QQ 邮箱", "https://mail.qq.com/"),
-            RecommendedSite("126 邮箱", "https://mail.126.com/")
+            RecommendedSite("Practice Test Automation · 登录测试",
+                "https://practicetestautomation.com/practice-test-login/"),
+            RecommendedSite("Authentication Test · 分步登录",
+                "https://authenticationtest.com/multiStepAuth/")
         )
     }
 }
