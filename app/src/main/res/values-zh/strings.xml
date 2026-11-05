@@ -1,0 +1,18 @@
+<resources>
+
+    <string name="locale_skin_title">语言与换肤 Demo</string>
+    <string name="locale_skin_language">应用语言</string>
+    <string name="locale_skin_chinese">中文</string>
+    <string name="locale_skin_english">English</string>
+    <string name="locale_skin_system">跟随系统</string>
+    <string name="locale_skin_theme">外观</string>
+    <string name="locale_skin_light">浅色</string>
+    <string name="locale_skin_dark">深色</string>
+    <string name="locale_skin_sample">你好！这段文字来自中文字符串资源。</string>
+    <string name="locale_skin_image">中文图片：菱形；浅色：太阳，深色：月亮</string>
+    <string name="locale_skin_hint">语言、外观可以独立切换。页面重建时自动加载对应的字符串、图片和颜色资源。语言、外观设置作用于整个应用。页面需使用 DayNight 主题及配套资源才能自动换肤。</string>
+    <string name="locale_skin_status">语言：%1$s\n外观：%2$s\n颜色：%3$s\n图片资源：%4$s</string>
+    <string name="locale_skin_secondary_title">二级页面：语言与换肤</string>
+    <string name="locale_skin_open_secondary">打开二级页面</string>
+    <string name="locale_skin_back">返回一级页面</string>
+</resources>

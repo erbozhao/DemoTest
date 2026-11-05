@@ -78,4 +78,8 @@
     <color name="kibo_black">#ff4D5258</color>
 
     <color name="window_bg">#FF000000</color>
+
+    <color name="locale_skin_background">#101827</color>
+    <color name="locale_skin_foreground">#E4ECFA</color>
+    <color name="locale_skin_accent">#9EBEFF</color>
 </resources>

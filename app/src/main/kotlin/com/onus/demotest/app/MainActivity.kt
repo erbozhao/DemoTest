@@ -29,6 +29,7 @@ import com.onus.demotest.data.ActivityStateManager
 import com.onus.demotest.feature.file.AllFileActivity
 import com.onus.demotest.feature.whatsapp.AllStatusActivity
 import com.onus.demotest.feature.notification.BindNotificationActivity
+import com.onus.demotest.feature.skin.LocaleSkinDemoActivity
 import com.onus.demotest.feature.ui.FontsActivity
 import com.onus.demotest.feature.file.UsageStatsActivity
 import com.onus.demotest.feature.notification.NotifyDemoActivity
@@ -179,6 +180,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initListener(){
+        findViewById<Button>(R.id.localeSkinDemo).setOnClickListener {
+            startActivity(Intent(this, LocaleSkinDemoActivity::class.java))
+        }
+
         findViewById<Button?>(R.id.adDemo)?.setOnClickListener {
             startActivity(Intent(this, AdDemoActivity::class.java))
         }

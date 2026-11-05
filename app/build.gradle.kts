@@ -175,6 +175,8 @@ dependencies {
     implementation("androidx.startup:startup-runtime:1.2.0")
     implementation("com.google.android.material:material:1.13.0")
     implementation("androidx.lifecycle:lifecycle-service:2.10.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.10.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
     implementation("androidx.webkit:webkit:1.14.0")
     implementation("com.google.code.gson:gson:2.13.2")
     implementation("com.google.firebase:firebase-analytics:23.0.0")

@@ -120,4 +120,8 @@
     <color name="theme_common_color_bg">#fff3f3f3</color>
 
     <color name="transparent">#00000000</color>
+
+    <color name="locale_skin_background">#F4F7FC</color>
+    <color name="locale_skin_foreground">#18263B</color>
+    <color name="locale_skin_accent">#245BC3</color>
 </resources>

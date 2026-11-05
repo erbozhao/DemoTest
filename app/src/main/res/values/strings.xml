@@ -2,4 +2,20 @@
     <string name="app_name">DemoTest</string>
 
     <string name="title_whatsapp_cache">Get WhatsApp cache</string>
+
+    <string name="locale_skin_title">Language &amp; skin demo</string>
+    <string name="locale_skin_language">App language</string>
+    <string name="locale_skin_chinese">中文</string>
+    <string name="locale_skin_english">English</string>
+    <string name="locale_skin_system">System</string>
+    <string name="locale_skin_theme">Appearance</string>
+    <string name="locale_skin_light">Light</string>
+    <string name="locale_skin_dark">Dark</string>
+    <string name="locale_skin_sample">Hello! This text comes from English string resources.</string>
+    <string name="locale_skin_image">English image: triangle; light: sun, dark: moon</string>
+    <string name="locale_skin_hint">Switch language and appearance independently. Text, image and colors are loaded from resource variants when this page is recreated. Language and appearance preferences apply to the whole app. Pages need DayNight themes and matching resources to change appearance.</string>
+    <string name="locale_skin_status">Locale: %1$s\nAppearance: %2$s\nColor: %3$s\nImage resource: %4$s</string>
+    <string name="locale_skin_secondary_title">Second page: language &amp; skin</string>
+    <string name="locale_skin_open_secondary">Open second page</string>
+    <string name="locale_skin_back">Back to first page</string>
 </resources>

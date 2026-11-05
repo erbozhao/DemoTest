@@ -15,4 +15,11 @@
     </style>
 
 
+
+    <style name="Theme.DemoTest.LocaleSkin" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/locale_skin_background</item>
+        <item name="android:colorBackground">@color/locale_skin_background</item>
+        <item name="android:textColorPrimary">@color/locale_skin_foreground</item>
+        <item name="colorAccent">@color/locale_skin_accent</item>
+    </style>
 </resources>
